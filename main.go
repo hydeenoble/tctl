@@ -15,7 +15,9 @@ limitations under the License.
 */
 package main
 
-import "tctl/cmd"
+import (
+	"tctl/cmd"
+)
 
 func main() {
 	cmd.Execute()
