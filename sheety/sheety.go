@@ -11,6 +11,12 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type Tasks struct{
+	task string
+	age string
+	status string
+}
+
 func init (){
 	err := godotenv.Load()
 	if err != nil {
