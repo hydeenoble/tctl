@@ -77,8 +77,8 @@ func CreateTask(tasks string){
     fmt.Println(string(responseData))
 }
 
-func GetTasks(){
-	response, err := http.Get(os.Getenv("API_URL"))
+func GetTasks(status string){
+	response, err := http.Get(os.Getenv("API_URL")+"?status="+status)
 	
 	if err != nil {
         fmt.Print(err.Error())
