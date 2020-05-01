@@ -55,7 +55,7 @@ func CreateTask(tasks string){
 			"time": "%v",
 			"status": "pending"
 		}
-	}`, tasks, time.Now())
+	}`, tasks, time.Now().Format("2006/01/02 15:04:05"))
 
 	response, err := http.Post(os.Getenv("API_URL"), "application/json", 
 	bytes.NewBuffer([]byte(requestParam)))
@@ -99,7 +99,7 @@ func GetTasks(){
         log.Fatal(err)
 	}
 	
-	for i := 0; i <= len(*resp.Tasks); i++ {
-		fmt.Println((*resp.Tasks)[0].Task)
+	for i := 0; i < len(*resp.Tasks); i++ {
+		fmt.Println((*resp.Tasks)[i].Task)
 	}
 }
