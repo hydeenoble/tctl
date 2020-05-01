@@ -8,39 +8,14 @@ import (
 	"net/http"
 	"os"
 	"time"
-
 	"github.com/joho/godotenv"
 	"encoding/json"
-	"strings"
+	// "strings"
 	"text/tabwriter"
+	"tctl/model"
+	"tctl/helper"
 	
 )
-
-type Tasks struct{
-	Task string `json:"task"`
-	Time TransformTime `json:"time"`
-	Status string `json:"status"`
-}
-
-type SheetyTasks struct {
-	Tasks *[]Tasks `json:"tasks"`
-}
-
-type TransformTime struct {
-	time.Time
-}
-
-func (tt *TransformTime) UnmarshalJSON(input []byte) error {
-    strInput := string(input)
-    strInput = strings.Trim(strInput, `"`)
-    newTime, err := time.Parse("2006/01/02 15:04:05", strInput)
-    if err != nil {
-        return err
-    }
-
-    tt.Time = newTime
-    return nil
-}
 
 func init (){
 	err := godotenv.Load()
@@ -90,8 +65,8 @@ func GetTasks(status string){
         log.Fatal(err)
 	}
 	
-	resp := &SheetyTasks{
-		Tasks: &[]Tasks{},
+	resp := &model.SheetyTasks{
+		Tasks: &[]model.Tasks{},
 	}
 
 	err = json.Unmarshal([]byte(string(responseData)), resp)
@@ -102,7 +77,10 @@ func GetTasks(status string){
 	w.Init(os.Stdout, 5, 0, 4, ' ', 0)
 	fmt.Fprintln(w, "TASK\tSTATUS\tAGE")
 	for i := 0; i < len(*resp.Tasks); i++ {
-		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v", (*resp.Tasks)[i].Task, (*resp.Tasks)[i].Status, (*resp.Tasks)[i].Time))
+		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v", 
+		(*resp.Tasks)[i].Task, (*resp.Tasks)[i].Status, 
+		(*resp.Tasks)[i].Time))
+		helper.TimeToAgeConverter((*resp.Tasks)[i].Time)
 	}
 	fmt.Fprint(w)
 	w.Flush()
