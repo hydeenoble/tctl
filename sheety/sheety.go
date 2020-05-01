@@ -2,18 +2,19 @@ package sheety
 
 import (
 	"bytes"
-	"log"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 )
 
 type Tasks struct{
 	task string
-	age string
+	time time.Time
 	status string
 }
 
@@ -28,11 +29,11 @@ func CreateTask(tasks string){
 	
 	requestParam := fmt.Sprintf(`{
 		"task": {
-			"name": "%v",
-			"age": "1122",
-			"sex": "male"
+			"task": "%v",
+			"time": "%v",
+			"status": "pending"
 		}
-	}`, tasks)
+	}`, tasks, time.Now())
 
 	response, err := http.Post(os.Getenv("API_URL"),
 	"application/json", 
