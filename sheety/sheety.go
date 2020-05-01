@@ -104,6 +104,10 @@ func GetTasks(status string){
 	for i := 0; i < len(*resp.Tasks); i++ {
 		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v", (*resp.Tasks)[i].Task, (*resp.Tasks)[i].Status, (*resp.Tasks)[i].Time))
 	}
-	fmt.Fprintln(w)
+	fmt.Fprint(w)
 	w.Flush()
+	if len(*resp.Tasks) < 1 {
+		fmt.Println("No tasks found")
+	}
+	
 }
