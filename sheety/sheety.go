@@ -12,6 +12,8 @@ import (
 	"github.com/joho/godotenv"
 	"encoding/json"
 	"strings"
+	"text/tabwriter"
+	
 )
 
 type Tasks struct{
@@ -88,8 +90,6 @@ func GetTasks(){
         log.Fatal(err)
 	}
 	
-	// fmt.Println(string(responseData))
-
 	resp := &SheetyTasks{
 		Tasks: &[]Tasks{},
 	}
@@ -98,8 +98,12 @@ func GetTasks(){
 	if err != nil {
         log.Fatal(err)
 	}
-	
+	w := new(tabwriter.Writer)
+	w.Init(os.Stdout, 5, 0, 4, ' ', 0)
+	fmt.Fprintln(w, "TASK\tSTATUS\tAGE")
 	for i := 0; i < len(*resp.Tasks); i++ {
-		fmt.Println((*resp.Tasks)[i].Task)
+		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v", (*resp.Tasks)[i].Task, (*resp.Tasks)[i].Status, (*resp.Tasks)[i].Time))
 	}
+	fmt.Fprintln(w)
+	w.Flush()
 }
