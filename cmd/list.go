@@ -12,3 +12,7 @@ var listCmd = &cobra.Command{
 		sheety.GetTasks();
 	},
 }
+
+func init() {
+	rootCmd.AddCommand(listCmd)
+}

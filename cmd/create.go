@@ -12,3 +12,7 @@ var createCmd = &cobra.Command{
 		sheety.CreateTask("Work on helm - 2");
 	},
 }
+
+func init() {
+	rootCmd.AddCommand(createCmd)
+}
