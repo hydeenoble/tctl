@@ -5,10 +5,10 @@ import (
 	"github.com/spf13/cobra"
 	"tctl/sheety"
 )
-var createCmd = &cobra.Command{
-	Use:   "create",
+var listCmd = &cobra.Command{
+	Use:   "list",
 	Run: func(cmd *cobra.Command, args []string) { 
-		fmt.Println("Create Command.")
-		sheety.CreateTask("Work on helm - 2");
+		fmt.Println("List Command.")
+		sheety.GetTasks();
 	},
 }
