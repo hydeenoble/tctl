@@ -10,7 +10,6 @@ import (
 	"time"
 	"github.com/joho/godotenv"
 	"encoding/json"
-	// "strings"
 	"text/tabwriter"
 	"tctl/model"
 	"tctl/helper"
