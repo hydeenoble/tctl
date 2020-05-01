@@ -13,6 +13,8 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.6.3
+	github.com/tidwall/gjson v1.6.0
+	github.com/tidwall/pretty v1.0.1 // indirect
 	golang.org/x/sys v0.0.0-20200427175716-29b57079015a // indirect
 	golang.org/x/text v0.3.2 // indirect
 	gopkg.in/ini.v1 v1.55.0 // indirect
