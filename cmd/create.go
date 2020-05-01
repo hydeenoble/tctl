@@ -9,7 +9,6 @@ var createCmd = &cobra.Command{
 	Use:   "create",
 	Run: func(cmd *cobra.Command, args []string) { 
 		fmt.Println("Create Command.")
-		// sheety.CreateTask("Work on helm");
-		sheety.GetTasks();
+		sheety.CreateTask("Work on helm");
 	},
 }
