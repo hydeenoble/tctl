@@ -46,11 +46,24 @@ func CreateTask(task string){
 	
 	defer response.Body.Close()
 
-    responseData, err := ioutil.ReadAll(response.Body)
-    if err != nil {
+	responseData, err := ioutil.ReadAll(response.Body)
+	
+	if err != nil {
         log.Fatal(err)
-    }
-    fmt.Println(string(responseData))
+	}
+	
+	resp := &model.SheetyTask{
+		Task: &model.Task{},
+	}
+
+	err = json.Unmarshal([]byte(string(responseData)), resp)
+	if err != nil {
+        log.Fatal(err)
+	}
+	
+	resp.Output()
+
+    // fmt.Println(string(responseData))
 }
 
 func GetTasks(status string){

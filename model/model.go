@@ -48,7 +48,9 @@ func timeFormater(seconds float64) string {
 	}
 }
 
-// func (st string) Output () {}
+func (st SheetyTask) Output () {
+    fmt.Println("Task '" + st.Task.Task + "' created.")
+}
 
 func (st SheetyTasks) Output() {
 	w := new(tabwriter.Writer)
