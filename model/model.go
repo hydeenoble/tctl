@@ -9,18 +9,28 @@ import (
 	"math"
 )
 
-type Tasks struct{
+type Task struct{
 	Task string `json:"task"`
-	Time TransformTime `json:"time"`
+	Time string `json:"time"`
 	Status string `json:"status"`
 }
 
 type SheetyTasks struct {
-	Tasks *[]Tasks `json:"tasks"`
+	Tasks *[]Task `json:"tasks"`
+}
+
+type SheetyTask struct {
+    Task *Task `json:"task"`
 }
 
 type TransformTime struct {
 	time.Time
+}
+
+func (st SheetyTask) Default () {
+    st.Task.Status = "backlog"
+    st.Task.Time = time.Now().Format("2006/01/02 15:04:05")
+    // .Format("2006/01/02 15:04:05")
 }
 
 func (tt *TransformTime) UnmarshalJSON(input []byte) error {
@@ -35,9 +45,10 @@ func (tt *TransformTime) UnmarshalJSON(input []byte) error {
     return nil
 }
 
-func timeToAgeConverter(timestamp TransformTime) string {
+func timeToAgeConverter(timestamp string) string {
 	now, _ := time.Parse("2006/01/02 15:04:05", time.Now().Format("2006/01/02 15:04:05"))
-	duration := now.Sub(timestamp.Time).String()
+    parsedTimestamp, _ := time.Parse("2006/01/02 15:04:05", timestamp)
+    duration := now.Sub(parsedTimestamp).String()
 	parsedDuration, _ := time.ParseDuration(duration)
 	seconds := parsedDuration.Seconds()
 	return timeFormater(seconds)
@@ -55,6 +66,8 @@ func timeFormater(seconds float64) string {
 	}
 }
 
+// func (st string) Output () {}
+
 func (st SheetyTasks) Output() {
 	w := new(tabwriter.Writer)
 	w.Init(os.Stdout, 5, 0, 4, ' ', 0)
@@ -62,7 +75,7 @@ func (st SheetyTasks) Output() {
 	for i := 0; i < len(*st.Tasks); i++ {
 		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v", 
 		(*st.Tasks)[i].Task, (*st.Tasks)[i].Status, 
-		timeToAgeConverter((*st.Tasks)[i].Time)))
+        timeToAgeConverter((*st.Tasks)[i].Time)))
 	}
 	fmt.Fprint(w)
 	w.Flush()

@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
+	// "time"
 	"github.com/joho/godotenv"
 	"encoding/json"
 	// "text/tabwriter"
@@ -21,18 +21,31 @@ func init (){
 	}
 }
 
-func CreateTask(tasks string){
+func CreateTask(task string){
 	
-	requestParam := fmt.Sprintf(`{
-		"task": {
-			"task": "%v",
-			"time": "%v",
-			"status": "backlog"
-		}
-	}`, tasks, time.Now().Format("2006/01/02 15:04:05"))
+	// requestParam := fmt.Sprintf(`{
+	// 	"task": {
+	// 		"task": "%v",
+	// 		"time": "%v",
+	// 		"status": "backlog"
+	// 	}
+	// }`, task, time.Now().Format("2006/01/02 15:04:05"))
 
+	requestParam := &model.SheetyTask{
+		Task: &model.Task{
+			Task: task,
+		},
+	}
+	requestParam.Default()
+
+	requestParamString, err := json.Marshal(requestParam)
+
+	if err != nil {
+        log.Fatal(err)
+	}
+	
 	response, err := http.Post(os.Getenv("API_URL"), "application/json", 
-	bytes.NewBuffer([]byte(requestParam)))
+	bytes.NewBuffer([]byte(string(requestParamString))))
 	
 
 	if err != nil {
@@ -63,7 +76,7 @@ func GetTasks(status string){
 	}
 	
 	resp := &model.SheetyTasks{
-		Tasks: &[]model.Tasks{},
+		Tasks: &[]model.Task{},
 	}
 
 	err = json.Unmarshal([]byte(string(responseData)), resp)
