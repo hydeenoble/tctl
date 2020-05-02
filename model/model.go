@@ -2,7 +2,6 @@ package model
 
 import (
 	"time"
-    "strings"
     "text/tabwriter"
     "os"
     "fmt"
@@ -23,26 +22,9 @@ type SheetyTask struct {
     Task *Task `json:"task"`
 }
 
-type TransformTime struct {
-	time.Time
-}
-
 func (st SheetyTask) Default () {
     st.Task.Status = "backlog"
     st.Task.Time = time.Now().Format("2006/01/02 15:04:05")
-    // .Format("2006/01/02 15:04:05")
-}
-
-func (tt *TransformTime) UnmarshalJSON(input []byte) error {
-    strInput := string(input)
-    strInput = strings.Trim(strInput, `"`)
-    newTime, err := time.Parse("2006/01/02 15:04:05", strInput)
-    if err != nil {
-        return err
-    }
-
-    tt.Time = newTime
-    return nil
 }
 
 func timeToAgeConverter(timestamp string) string {
