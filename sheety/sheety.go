@@ -7,40 +7,12 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
-
+	// "time"
 	"github.com/joho/godotenv"
 	"encoding/json"
-	"strings"
-	"text/tabwriter"
-	
+	// "text/tabwriter"
+	"tctl/model"	
 )
-
-type Tasks struct{
-	Task string `json:"task"`
-	Time TransformTime `json:"time"`
-	Status string `json:"status"`
-}
-
-type SheetyTasks struct {
-	Tasks *[]Tasks `json:"tasks"`
-}
-
-type TransformTime struct {
-	time.Time
-}
-
-func (tt *TransformTime) UnmarshalJSON(input []byte) error {
-    strInput := string(input)
-    strInput = strings.Trim(strInput, `"`)
-    newTime, err := time.Parse("2006/01/02 15:04:05", strInput)
-    if err != nil {
-        return err
-    }
-
-    tt.Time = newTime
-    return nil
-}
 
 func init (){
 	err := godotenv.Load()
@@ -49,19 +21,23 @@ func init (){
 	}
 }
 
-func CreateTask(tasks string){
-	
-	requestParam := fmt.Sprintf(`{
-		"task": {
-			"task": "%v",
-			"time": "%v",
-			"status": "pending"
-		}
-	}`, tasks, time.Now().Format("2006/01/02 15:04:05"))
+func CreateTask(task string){
 
-	response, err := http.Post(os.Getenv("API_URL"), "application/json", 
-	bytes.NewBuffer([]byte(requestParam)))
+	requestParam := &model.SheetyTask{
+		Task: &model.Task{
+			Task: task,
+		},
+	}
+	requestParam.Default()
+
+	requestParamString, err := json.Marshal(requestParam)
+
+	if err != nil {
+        log.Fatal(err)
+	}
 	
+	response, err := http.Post(os.Getenv("API_URL"), "application/json", 
+	bytes.NewBuffer([]byte(string(requestParamString))))
 
 	if err != nil {
         fmt.Print(err.Error())
@@ -70,11 +46,24 @@ func CreateTask(tasks string){
 	
 	defer response.Body.Close()
 
-    responseData, err := ioutil.ReadAll(response.Body)
-    if err != nil {
+	responseData, err := ioutil.ReadAll(response.Body)
+	
+	if err != nil {
         log.Fatal(err)
-    }
-    fmt.Println(string(responseData))
+	}
+	
+	resp := &model.SheetyTask{
+		Task: &model.Task{},
+	}
+
+	err = json.Unmarshal([]byte(string(responseData)), resp)
+	if err != nil {
+        log.Fatal(err)
+	}
+	
+	resp.Output()
+
+    // fmt.Println(string(responseData))
 }
 
 func GetTasks(status string){
@@ -90,24 +79,14 @@ func GetTasks(status string){
         log.Fatal(err)
 	}
 	
-	resp := &SheetyTasks{
-		Tasks: &[]Tasks{},
+	resp := &model.SheetyTasks{
+		Tasks: &[]model.Task{},
 	}
 
 	err = json.Unmarshal([]byte(string(responseData)), resp)
 	if err != nil {
         log.Fatal(err)
 	}
-	w := new(tabwriter.Writer)
-	w.Init(os.Stdout, 5, 0, 4, ' ', 0)
-	fmt.Fprintln(w, "TASK\tSTATUS\tAGE")
-	for i := 0; i < len(*resp.Tasks); i++ {
-		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v", (*resp.Tasks)[i].Task, (*resp.Tasks)[i].Status, (*resp.Tasks)[i].Time))
-	}
-	fmt.Fprint(w)
-	w.Flush()
-	if len(*resp.Tasks) < 1 {
-		fmt.Println("No tasks found")
-	}
 	
+	resp.Output()
 }
