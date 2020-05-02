@@ -85,5 +85,4 @@ func GetTasks(status string){
 	if len(*resp.Tasks) < 1 {
 		fmt.Println("No tasks found")
 	}
-	
 }
