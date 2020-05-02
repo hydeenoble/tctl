@@ -22,14 +22,6 @@ func init (){
 }
 
 func CreateTask(task string){
-	
-	// requestParam := fmt.Sprintf(`{
-	// 	"task": {
-	// 		"task": "%v",
-	// 		"time": "%v",
-	// 		"status": "backlog"
-	// 	}
-	// }`, task, time.Now().Format("2006/01/02 15:04:05"))
 
 	requestParam := &model.SheetyTask{
 		Task: &model.Task{
@@ -46,7 +38,6 @@ func CreateTask(task string){
 	
 	response, err := http.Post(os.Getenv("API_URL"), "application/json", 
 	bytes.NewBuffer([]byte(string(requestParamString))))
-	
 
 	if err != nil {
         fmt.Print(err.Error())
