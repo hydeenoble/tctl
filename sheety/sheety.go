@@ -10,10 +10,8 @@ import (
 	"time"
 	"github.com/joho/godotenv"
 	"encoding/json"
-	"text/tabwriter"
-	"tctl/model"
-	"tctl/helper"
-	
+	// "text/tabwriter"
+	"tctl/model"	
 )
 
 func init (){
@@ -29,7 +27,7 @@ func CreateTask(tasks string){
 		"task": {
 			"task": "%v",
 			"time": "%v",
-			"status": "pending"
+			"status": "backlog"
 		}
 	}`, tasks, time.Now().Format("2006/01/02 15:04:05"))
 
@@ -72,17 +70,6 @@ func GetTasks(status string){
 	if err != nil {
         log.Fatal(err)
 	}
-	w := new(tabwriter.Writer)
-	w.Init(os.Stdout, 5, 0, 4, ' ', 0)
-	fmt.Fprintln(w, "TASK\tSTATUS\tAGE")
-	for i := 0; i < len(*resp.Tasks); i++ {
-		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v", 
-		(*resp.Tasks)[i].Task, (*resp.Tasks)[i].Status, 
-		helper.TimeToAgeConverter((*resp.Tasks)[i].Time)))
-	}
-	fmt.Fprint(w)
-	w.Flush()
-	if len(*resp.Tasks) < 1 {
-		fmt.Println("No tasks found")
-	}
+	
+	resp.Output()
 }
