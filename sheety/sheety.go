@@ -62,8 +62,6 @@ func CreateTask(task string){
 	}
 	
 	resp.Output()
-
-    // fmt.Println(string(responseData))
 }
 
 func GetTasks(status string){
