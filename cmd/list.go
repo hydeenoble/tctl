@@ -13,15 +13,14 @@ var listCmd = &cobra.Command{
 
 		if p {
 			sheety.GetTasks("progress");
-		}
-		if b {
+		}else if b {
 			sheety.GetTasks("backlog");
-		}
-		if d {
+		}else if d {
 			sheety.GetTasks("backlog");
+		}else{
+			sheety.GetTasks("");
 		}
 
-		
 	},
 }
 

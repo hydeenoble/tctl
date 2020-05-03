@@ -65,7 +65,15 @@ func CreateTask(task string){
 }
 
 func GetTasks(status string){
-	response, err := http.Get(os.Getenv("API_URL")+"?status="+status)
+	var response *http.Response
+	var err error
+
+	if status == "" {
+		fmt.Println("here!")
+		response, err = http.Get(os.Getenv("API_URL"))
+	}else{
+		response, err = http.Get(os.Getenv("API_URL")+"?status="+status)
+	}
 	
 	if err != nil {
         fmt.Print(err.Error())
