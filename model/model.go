@@ -1,11 +1,12 @@
 package model
 
 import (
-	"time"
-    "text/tabwriter"
-    "os"
-    "fmt"
+	"fmt"
 	"math"
+	"os"
+	"strings"
+	"text/tabwriter"
+	"time"
 )
 
 type Task struct{
@@ -58,7 +59,7 @@ func (st SheetyTasks) Output() {
 	fmt.Fprintln(w, "TASK\tSTATUS\tAGE")
 	for i := 0; i < len(*st.Tasks); i++ {
 		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v", 
-		(*st.Tasks)[i].Task, (*st.Tasks)[i].Status, 
+		(*st.Tasks)[i].Task, strings.Title((*st.Tasks)[i].Status), 
         timeToAgeConverter((*st.Tasks)[i].Time)))
 	}
 	fmt.Fprint(w)
