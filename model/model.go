@@ -58,11 +58,13 @@ func (st SheetyTask) Output() {
 func (st SheetyTasks) Output() {
 	w := new(tabwriter.Writer)
 	w.Init(os.Stdout, 5, 0, 4, ' ', 0)
-	fmt.Fprintln(w, "TASK\tSTATUS\tAGE")
+	fmt.Fprintln(w, "ID\tTASK\tSTATUS\tAGE")
 	for i := 0; i < len(*st.Tasks); i++ {
 		fmt.Println((*st.Tasks)[i].TaskId)
-		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v",
-			(*st.Tasks)[i].Task, strings.Title((*st.Tasks)[i].Status),
+		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v\t%v",
+			(*st.Tasks)[i].TaskId,
+			(*st.Tasks)[i].Task, 
+			strings.Title((*st.Tasks)[i].Status),
 			timeToAgeConverter((*st.Tasks)[i].Time)))
 	}
 	fmt.Fprint(w)
@@ -73,5 +75,10 @@ func (st SheetyTasks) Output() {
 }
 
 func GenerateID(task string) string {
-	return strings.ReplaceAll(task[:10], " ", "-") + "-" + strconv.FormatInt(time.Now().Unix(), 10)
+	if len(task) < 20 {
+		return strings.ReplaceAll(task[:len(task)], " ", "-") + "-" + strconv.FormatInt(time.Now().Unix(), 10)
+	}
+
+	return strings.ReplaceAll(task[:20], " ", "-") + "-" + strconv.FormatInt(time.Now().Unix(), 10)
+
 }
