@@ -26,6 +26,7 @@ func CreateTask(task string){
 	requestParam := &model.SheetyTask{
 		Task: &model.Task{
 			Task: task,
+			TaskId: model.GenerateID(task),
 		},
 	}
 	requestParam.Default()
