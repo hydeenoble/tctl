@@ -7,10 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	// "time"
 	"github.com/joho/godotenv"
 	"encoding/json"
-	// "text/tabwriter"
 	"tctl/model"	
 )
 
@@ -26,7 +24,6 @@ func CreateTask(task string){
 	requestParam := &model.SheetyTask{
 		Task: &model.Task{
 			Task: task,
-			TaskId: model.GenerateID(task),
 		},
 	}
 	requestParam.Default()
@@ -39,7 +36,7 @@ func CreateTask(task string){
 	
 	response, err := http.Post(os.Getenv("API_URL"), "application/json", 
 	bytes.NewBuffer([]byte(string(requestParamString))))
-
+	
 	if err != nil {
         fmt.Print(err.Error())
         os.Exit(1)
@@ -57,11 +54,10 @@ func CreateTask(task string){
 		Task: &model.Task{},
 	}
 
-	err = json.Unmarshal([]byte(string(responseData)), resp)
+	err = json.Unmarshal([]byte(responseData), resp)
 	if err != nil {
         log.Fatal(err)
 	}
-	
 	resp.Output()
 }
 
@@ -70,7 +66,6 @@ func GetTasks(status string){
 	var err error
 
 	if status == "" {
-		fmt.Println("here!")
 		response, err = http.Get(os.Getenv("API_URL"))
 	}else{
 		response, err = http.Get(os.Getenv("API_URL")+"?status="+status)
@@ -91,9 +86,14 @@ func GetTasks(status string){
 	}
 
 	err = json.Unmarshal([]byte(string(responseData)), resp)
+	fmt.Println("err", err)
 	if err != nil {
         log.Fatal(err)
 	}
 	
 	resp.Output()
+}
+
+func Deletetask() {
+
 }

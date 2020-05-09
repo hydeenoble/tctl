@@ -11,10 +11,10 @@ import (
 )
 
 type Task struct {
-	TaskId string `json:"taskId"`
-	Task   string `json:"task"`
-	Time   string `json:"time"`
-	Status string `json:"status"`
+	ID interface{} `json:"id,omitempty"`
+	Task   string `json:"task,omitempty"`
+	Time   string `json:"time,omitempty"`
+	Status string `json:"status,omitempty"`
 }
 
 type SheetyTasks struct {
@@ -60,9 +60,9 @@ func (st SheetyTasks) Output() {
 	w.Init(os.Stdout, 5, 0, 4, ' ', 0)
 	fmt.Fprintln(w, "ID\tTASK\tSTATUS\tAGE")
 	for i := 0; i < len(*st.Tasks); i++ {
-		fmt.Println((*st.Tasks)[i].TaskId)
+		// fmt.Println(strconv((*st.Tasks)[i].ID))
 		fmt.Fprintln(w, fmt.Sprintf("%v\t%v\t%v\t%v",
-			(*st.Tasks)[i].TaskId,
+			(*st.Tasks)[i].ID,
 			(*st.Tasks)[i].Task, 
 			strings.Title((*st.Tasks)[i].Status),
 			timeToAgeConverter((*st.Tasks)[i].Time)))
