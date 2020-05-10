@@ -94,6 +94,33 @@ func GetTasks(status string){
 	resp.Output()
 }
 
-func Deletetask() {
+func Deletetask(taskId string) {
 
+	// Create client
+    client := &http.Client{}
+
+    // Create request
+    req, err := http.NewRequest("DELETE", os.Getenv("API_URL") + "/" + taskId, nil)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+
+    // Fetch Request
+    resp, err := client.Do(req)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    defer resp.Body.Close()
+
+    // Read Response Body
+    _, err = ioutil.ReadAll(resp.Body)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+
+    // Display Results
+    fmt.Println("Task with ID: " + taskId + " deleted");
 }

@@ -8,8 +8,9 @@ import (
 
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) { 
-		sheety.Deletetask();
+		sheety.Deletetask(args[0]);
 	},
 }
 
